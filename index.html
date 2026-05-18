@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIIs Analytics Pro</title>
+    <script type='text/javascript'
+        src='https://prod-chat-kimi.tos-cn-beijing.volces.com/I0nGFQ-LSN3pMd9AOyiC_Vms4JOKgInKBlkk4YtZmRNXGhjD2-BEQ3E_Ouy7IQTFoYQT3Y7KynK64Y0rWUQZDwFG9EPaqzUDOCj-THg3Rn3noGgELlGucZPfJjjYYxVKiSC50YWeGeWIQaUFARj4v1ZTNsXqfmlWytzrvOt1Q04f1gMwfEHxgZEo867WVejtUugkr7MlYbbfBfNfjg4y8IYbo8oKolhPJv-V_gQNVpPb9Bxaw1P9lkvOIN_gTKMrON_f5S82xfiTAphQfrhKw7G_CFYeTbUQ4aW7M1AOUecDccxTCG6FlbYLOKpVUYs3Gmq3pI2PUYN2oxGZo6CYjr1j6IXhrAdskE0FyW777ZUoT_pXqaKGjEMN9_7PWDdvwosxTW_QWBirWBReNZ97Go03nDXwWTP_g0oQJlzBjR7UEt-7tLLKKQ8ZWyG2VHbupPTTJi5Du04c1VdKSnvHon3qrAE4OytZCDEsnodCyYzDVcTmLTmnKiqCLjDFcx3KXdcZWNpNYnxKyGaAF44750k96JikZjq3HAzgKa4TfARDvlnXCt-sz8QyTSISwwzk2JncdVMIYsePoebh3as61IKedJ2DaWLQmII_-RN2OFJzZs6knAXH3m1Br1Y1NfLJn5rd0JaTm0A8ONfdD5bTj3HDJ_Xh8xCttBFPYDvk8iFY32kwf1vW6NbaCSWM64uWrWP-QDuHey4zGiPKs6SRV_YCB1EawuvHcPgKplnaHnBeK-Qw18qzWBvGS50PxHlgtw4jUvKWVm27Fhl6uYazkWL8K--u2GwQzgqn2AKQRI88cS7bDZ36603LPK8IbIb6tL3eVSXFw_gU4xDo55VgfB_4qPCf8x00Njzxl5zgMYzmdjXsoqMa8sTPS3vCPcx6LFAWydsBzoWrDjaUzpOWyuiZ_qIS78MPh_7Q819sC0SOwhyYhiQpHQDLVLnO_J4bgTYJys8rAq7XXIYNQ8tQQV8MzPwrx0CiPnZ25rINk_u-MnXAAjKtqpYiP3w7nYeLugP_BeuUe0vYWIXLJfzftUqJmVvku7OcUkm7vEP_0MDZ-HvpnBG8Y8XBHDc'></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+
+        .card-glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .score-excellent {
+            background: linear-gradient(135deg, #059669, #10b981);
+        }
+
+        .score-good {
+            background: linear-gradient(135deg, #0891b2, #06b6d4);
+        }
+
+        .score-moderate {
+            background: linear-gradient(135deg, #d97706, #f59e0b);
+        }
+
+        .score-poor {
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+        }
+
+        .score-bad {
+            background: linear-gradient(135deg, #991b1b, #dc2626);
+        }
+
+        .row-excellent {
+            background: linear-gradient(90deg, rgba(5, 150, 105, 0.15) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border-left: 4px solid #10b981;
+        }
+
+        .row-good {
+            background: linear-gradient(90deg, rgba(8, 145, 178, 0.15) 0%, rgba(6, 182, 212, 0.05) 100%);
+            border-left: 4px solid #06b6d4;
+        }
+
+        .row-moderate {
+            background: linear-gradient(90deg, rgba(217, 119, 6, 0.15) 0%, rgba(245, 158, 11, 0.05) 100%);
+            border-left: 4px solid #f59e0b;
+        }
+
+        .row-poor {
+            background: linear-gradient(90deg, rgba(220, 38, 38, 0.15) 0%, rgba(239, 68, 68, 0.05) 100%);
+            border-left: 4px solid #ef4444;
+        }
+
+        .row-bad {
+            background: linear-gradient(90deg, rgba(153, 27, 27, 0.2) 0%, rgba(220, 38, 38, 0.1) 100%);
+            border-left: 4px solid #dc2626;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #1e293b;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 4px;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #334155;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #10b981;
+            cursor: pointer;
+            border: 2px solid #0f172a;
+        }
+
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 40;
+        }
+
+        .sort-asc::after {
+            content: " ▲";
+            color: #10b981;
+            font-size: 0.7em;
+        }
+
+        .sort-desc::after {
+            content: " ▼";
+            color: #10b981;
+            font-size: 0.7em;
+        }
+    </style>
+    <base target="_blank">
+</head>
+
+<body class="gradient-bg text-gray-100 min-h-screen">
+
+    <header class="border-b border-gray-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div
+                        class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-bold text-lg">
+                        F</div>
+                    <div>
+                        <h1 class="text-xl font-bold text-white">FIIs Analytics Pro</h1>
+                        <p class="text-xs text-gray-400">Análise Inteligente de Fundos Imobiliários</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="text-right hidden md:block">
+                        <div class="text-xs text-gray-400">IFIX Atual</div>
+                        <div class="text-sm font-semibold text-emerald-400">3.247,85 pts (+1,32%)</div>
+                    </div>
+                    <button onclick="exportData()"
+                        class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-sm font-medium transition-colors border border-gray-700">📥
+                        Exportar CSV</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="metric-card card-glass rounded-xl p-4">
+                <div class="text-xs text-gray-400 mb-1">Fundos Analisados</div>
+                <div class="text-2xl font-bold text-white" id="totalFunds">0</div>
+                <div class="text-xs text-emerald-400 mt-1">Base IFIX + Selecionados</div>
+            </div>
+            <div class="metric-card card-glass rounded-xl p-4">
+                <div class="text-xs text-gray-400 mb-1">Melhores Oportunidades</div>
+                <div class="text-2xl font-bold text-emerald-400" id="bestOpportunities">0</div>
+                <div class="text-xs text-gray-500 mt-1">Score &gt; 80 pontos</div>
+            </div>
+            <div class="metric-card card-glass rounded-xl p-4">
+                <div class="text-xs text-gray-400 mb-1">Média P/VP IFIX</div>
+                <div class="text-2xl font-bold text-cyan-400" id="avgPVP">0.00</div>
+                <div class="text-xs text-gray-500 mt-1">Desconto médio de 15%</div>
+            </div>
+            <div class="metric-card card-glass rounded-xl p-4">
+                <div class="text-xs text-gray-400 mb-1">DY Médio Carteira</div>
+                <div class="text-2xl font-bold text-amber-400" id="avgDY">0.00%</div>
+                <div class="text-xs text-gray-500 mt-1">Baseado nos 50 maiores</div>
+            </div>
+        </div>
+
+        <div class="card-glass rounded-xl p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-lg font-semibold text-white flex items-center gap-2"><span
+                        class="w-2 h-2 rounded-full bg-emerald-500"></span>Filtros de Análise</h2>
+                <button onclick="resetFilters()" class="text-xs text-cyan-400 hover:text-cyan-300 transition-colors">↺
+                    Resetar Filtros</button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                <div>
+                    <label class="block text-xs text-gray-400 mb-2">P/VP Máximo</label>
+                    <div class="flex items-center gap-3">
+                        <input type="range" id="pvpFilter" min="0.5" max="2.0" step="0.05" value="1.2"
+                            oninput="updateFilterDisplay('pvp', this.value)">
+                        <span class="text-sm font-mono text-emerald-400 w-12" id="pvpValue">1.20</span>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-2">Liquidez Mínima (R$)</label>
+                    <div class="flex items-center gap-3">
+                        <input type="range" id="liquidezFilter" min="0" max="2000000" step="50000" value="0"
+                            oninput="updateFilterDisplay('liquidez', this.value)">
+                        <span class="text-sm font-mono text-emerald-400 w-16" id="liquidezValue">0</span>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-2">DY Mínimo (%)</label>
+                    <div class="flex items-center gap-3">
+                        <input type="range" id="dyFilter" min="0" max="20" step="0.5" value="6"
+                            oninput="updateFilterDisplay('dy', this.value)">
+                        <span class="text-sm font-mono text-emerald-400 w-12" id="dyValue">6.0%</span>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-2">Vacância Máxima (%)</label>
+                    <div class="flex items-center gap-3">
+                        <input type="range" id="vacanciaFilter" min="0" max="50" step="5" value="15"
+                            oninput="updateFilterDisplay('vacancia', this.value)">
+                        <span class="text-sm font-mono text-emerald-400 w-12" id="vacanciaValue">15%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-wrap gap-3 mb-4">
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" id="ifixOnly" checked onchange="applyFilters()"
+                        class="w-4 h-4 rounded border-gray-600 bg-slate-800 text-emerald-500">
+                    <span class="text-sm text-gray-300">Apenas IFIX</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" id="excludeMonoAtivo" checked onchange="applyFilters()"
+                        class="w-4 h-4 rounded border-gray-600 bg-slate-800 text-emerald-500">
+                    <span class="text-sm text-gray-300">Excluir Monoativos</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" id="excludeMonoInquilino" checked onchange="applyFilters()"
+                        class="w-4 h-4 rounded border-gray-600 bg-slate-800 text-emerald-500">
+                    <span class="text-sm text-gray-300">Excluir Monoinquilino</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" id="excludeFiagro" checked onchange="applyFilters()"
+                        class="w-4 h-4 rounded border-gray-600 bg-slate-800 text-emerald-500">
+                    <span class="text-sm text-gray-300">Excluir Fiagros/FIPs</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" id="base10Only" onchange="applyFilters()"
+                        class="w-4 h-4 rounded border-gray-600 bg-slate-800 text-emerald-500">
+                    <span class="text-sm text-gray-300">Apenas Base 10 (< R$15)</span>
+                </label>
+            </div>
+            
+            <div class="border-t border-gray-700/50 pt-4">
+                <label class="block text-xs text-gray-400 mb-2">Filtrar por Setores</label>
+                <div id="sectorFilters" class="flex flex-wrap gap-3">
+                    <!-- Gerado dinamicamente via JS -->
+                </div>
+            </div>
+        </div>
+
+        <div class="card-glass rounded-xl p-4">
+            <div class="flex flex-wrap items-center gap-4 text-xs">
+                <span class="text-gray-400 font-medium">Score de Qualidade:</span>
+                <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full score-excellent"></span><span
+                        class="text-emerald-400 font-semibold">90-100 (Excelente)</span></div>
+                <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full score-good"></span><span
+                        class="text-cyan-400 font-semibold">70-89 (Bom)</span></div>
+                <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full score-moderate"></span><span
+                        class="text-amber-400 font-semibold">50-69 (Moderado)</span></div>
+                <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full score-poor"></span><span
+                        class="text-red-400 font-semibold">30-49 (Fraco)</span></div>
+                <div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full score-bad"></span><span
+                        class="text-red-600 font-semibold">0-29 (Ruim)</span></div>
+            </div>
+        </div>
+
+        <div class="card-glass rounded-xl overflow-hidden">
+            <div class="p-4 border-b border-gray-700 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <h2 class="text-lg font-semibold text-white">Ranking de Fundos Imobiliários</h2>
+                <div class="flex items-center gap-2">
+                    <input type="text" id="searchInput" placeholder="Buscar ticker ou nome..."
+                        class="px-3 py-2 bg-slate-800 border border-gray-700 rounded-lg text-sm text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500 w-64"
+                        oninput="filterBySearch()">
+                    <select id="sortBy" onchange="sortTable()"
+                        class="px-3 py-2 bg-slate-800 border border-gray-700 rounded-lg text-sm text-white focus:outline-none focus:border-emerald-500">
+                        <option value="score">Ordenar por Score</option>
+                        <option value="pvp">Ordenar por P/VP</option>
+                        <option value="dy">Ordenar por DY</option>
+                        <option value="liquidez">Ordenar por Liquidez</option>
+                        <option value="vacancia">Ordenar por Vacância</option>
+                    </select>
+                </div>
+            </div>
+            <div class="overflow-x-auto custom-scrollbar" style="max-height:70vh;">
+                <table class="w-full text-sm">
+                    <thead class="sticky-header bg-slate-900/95 backdrop-blur">
+                        <tr class="text-left text-xs text-gray-400 uppercase tracking-wider">
+                            <th class="px-4 py-3 font-semibold cursor-pointer hover:text-white transition-colors"
+                                onclick="sortByColumn('score')" id="th-score">Score</th>
+                            <th class="px-4 py-3 font-semibold cursor-pointer hover:text-white transition-colors"
+                                onclick="sortByColumn('ticker')" id="th-ticker">Ticker</th>
+                            <th class="px-4 py-3 font-semibold cursor-pointer hover:text-white transition-colors"
+                                onclick="sortByColumn('setor')" id="th-setor">Setor</th>
+                            <th class="px-4 py-3 font-semibold cursor-pointer hover:text-white transition-colors text-right"
+                                onclick="sortByColumn('preco')" id="th-preco">Preço</th>
+                            <th class="px-4 py-3 font-semibold cursor-pointer hover:text-white transition-colors text-right"
+                                onclick="sortByColumn('pvp')" id="th-pvp">P/VP</th>
+                            <th class="px-4 py-3 font-semibold cursor-pointer hover:text-white transition-colors text-right"
+                                onclick="sortByColumn('dy')" id="th-dy">DY</th>
+                            <th class="px-4 py-3 font-semibold cursor-pointer hover:text-white transition-colors text-right"
+                                onclick="sortByColumn('liquidez')" id="th-liquidez">Liquidez</th>
+                            <th class="px-4 py-3 font-semibold cursor-pointer hover:text-white transition-colors text-right"
+                                onclick="sortByColumn('vacancia')" id="th-vacancia">Vacância</th>
+                            <th class="px-4 py-3 font-semibold text-center">Ativos</th>
+                            <th class="px-4 py-3 font-semibold text-center">IFIX</th>
+                            <th class="px-4 py-3 font-semibold text-center">Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fiiTableBody" class="divide-y divide-gray-800"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card-glass rounded-xl p-6">
+            <h3 class="text-lg font-semibold text-white mb-4">📊 Análise Fundamentalista - Top Oportunidades</h3>
+            <div id="analysisContent" class="space-y-4"></div>
+        </div>
+    </main>
+
+    <div id="detailModal"
+        class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-gray-700 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6 border-b border-gray-800 flex items-center justify-between">
+                <div>
+                    <h3 id="modalTicker" class="text-2xl font-bold text-white"></h3>
+                    <p id="modalName" class="text-gray-400 text-sm"></p>
+                </div>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <div class="p-6 space-y-6" id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        const fiiData = [
+            { ticker: "KNCR11", nome: "Kinea Rendimentos", setor: "Recebíveis", preco: 92.89, pvp: 0.98, dy: 13.5, liquidez: 1450000, vacancia: 0, ativos: 850, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "KNIP11", nome: "Kinea Índice de Preços", setor: "Recebíveis", preco: 60.80, pvp: 0.95, dy: 12.5, liquidez: 1200000, vacancia: 0, ativos: 720, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "XPML11", nome: "XP Malls", setor: "Shoppings", preco: 98.50, pvp: 0.88, dy: 8.5, liquidez: 950000, vacancia: 5.2, ativos: 12, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "HGLG11", nome: "CSHG Logística", setor: "Logística", preco: 102.30, pvp: 0.92, dy: 7.2, liquidez: 1100000, vacancia: 3.8, ativos: 18, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "BTLG11", nome: "BTG Pactual Logística", setor: "Logística", preco: 95.40, pvp: 0.89, dy: 7.8, liquidez: 880000, vacancia: 4.1, ativos: 15, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "KNRI11", nome: "Kinea Renda Imobiliária", setor: "Híbrido", preco: 135.20, pvp: 0.94, dy: 9.5, liquidez: 1350000, vacancia: 6.5, ativos: 45, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "MXRF11", nome: "Maxi Renda", setor: "Recebíveis", preco: 10.15, pvp: 1.02, dy: 14.5, liquidez: 2500000, vacancia: 0, ativos: 1200, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "VISC11", nome: "Vinci Shopping Centers", setor: "Shoppings", preco: 105.80, pvp: 0.85, dy: 9.2, liquidez: 780000, vacancia: 7.2, ativos: 8, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "XPLG11", nome: "XP Log", setor: "Logística", preco: 88.90, pvp: 0.87, dy: 8.2, liquidez: 920000, vacancia: 2.5, ativos: 22, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "KNHY11", nome: "Kinea High Yield CRI", setor: "Recebíveis", preco: 98.40, pvp: 0.96, dy: 15.5, liquidez: 850000, vacancia: 0, ativos: 650, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "TRXF11", nome: "TRX Real Estate", setor: "Híbrido", preco: 112.50, pvp: 0.91, dy: 8.8, liquidez: 720000, vacancia: 5.8, ativos: 38, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "HGRU11", nome: "CSHG Renda Urbana", setor: "Híbrido", preco: 125.30, pvp: 0.93, dy: 9.0, liquidez: 680000, vacancia: 4.2, ativos: 52, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "HGBS11", nome: "CSHG Brasil Shopping", setor: "Shoppings", preco: 78.90, pvp: 0.82, dy: 9.5, liquidez: 650000, vacancia: 8.5, ativos: 6, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "CPTS11", nome: "Capitania Securities II", setor: "Recebíveis", preco: 85.60, pvp: 0.97, dy: 13.8, liquidez: 580000, vacancia: 0, ativos: 480, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "IRDM11", nome: "Iridium Recebíveis", setor: "Recebíveis", preco: 92.10, pvp: 0.99, dy: 14.2, liquidez: 620000, vacancia: 0, ativos: 550, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "KNUQ11", nome: "Kinea Unique HY CDI", setor: "Recebíveis", preco: 95.80, pvp: 0.94, dy: 14.8, liquidez: 540000, vacancia: 0, ativos: 380, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "GGRC11", nome: "GGR Covepi Renda", setor: "Recebíveis", preco: 10.25, pvp: 1.01, dy: 13.5, liquidez: 2100000, vacancia: 0, ativos: 900, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "RECR11", nome: "REC Recebíveis", setor: "Recebíveis", preco: 88.50, pvp: 0.96, dy: 13.2, liquidez: 590000, vacancia: 0, ativos: 420, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "BCFF11", nome: "BTG Fundo de Fundos", setor: "Fundo de Fundos", preco: 78.30, pvp: 0.88, dy: 11.5, liquidez: 750000, vacancia: 0, ativos: 25, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "PVBI11", nome: "VBI Prime Properties", setor: "Lajes Corporativas", preco: 102.40, pvp: 0.86, dy: 7.5, liquidez: 480000, vacancia: 12.5, ativos: 8, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "HSML11", nome: "HSI Malls", setor: "Shoppings", preco: 65.80, pvp: 0.79, dy: 10.5, liquidez: 520000, vacancia: 9.8, ativos: 5, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "TGAR11", nome: "TG Ativo Real", setor: "Híbrido", preco: 95.40, pvp: 0.58, dy: 17.0, liquidez: 320000, vacancia: 8.0, ativos: 20, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "MCCI11", nome: "Mauá Capital Recebíveis", setor: "Recebíveis", preco: 92.10, pvp: 0.97, dy: 13.5, liquidez: 310000, vacancia: 0, ativos: 380, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "BBPO11", nome: "BB Progressivo II", setor: "Recebíveis", preco: 88.90, pvp: 0.95, dy: 12.5, liquidez: 300000, vacancia: 0, ativos: 450, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "HFOF11", nome: "Hedge Top FOFII 3", setor: "Fundo de Fundos", preco: 85.60, pvp: 0.87, dy: 11.8, liquidez: 290000, vacancia: 0, ativos: 30, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "RBVA11", nome: "Rio Bravo Renda Varejo", setor: "Shoppings", preco: 72.50, pvp: 0.76, dy: 11.2, liquidez: 270000, vacancia: 11.2, ativos: 4, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "PMLL11", nome: "Malls Brasil Plural", setor: "Shoppings", preco: 68.90, pvp: 0.74, dy: 11.5, liquidez: 260000, vacancia: 12.8, ativos: 3, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "HGCR11", nome: "CSHG Recebíveis", setor: "Recebíveis", preco: 95.80, pvp: 0.98, dy: 13.0, liquidez: 250000, vacancia: 0, ativos: 600, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "VILG11", nome: "Vinci Logística", setor: "Logística", preco: 92.40, pvp: 0.89, dy: 8.0, liquidez: 240000, vacancia: 3.5, ativos: 20, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "HGRE11", nome: "CSHG Real Estate", setor: "Lajes Corporativas", preco: 145.60, pvp: 0.85, dy: 6.8, liquidez: 230000, vacancia: 14.5, ativos: 10, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "CVBI11", nome: "VBI CRI", setor: "Recebíveis", preco: 94.20, pvp: 0.96, dy: 14.0, liquidez: 220000, vacancia: 0, ativos: 350, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "VGIR11", nome: "Valora RE III", setor: "Híbrido", preco: 108.50, pvp: 0.91, dy: 9.2, liquidez: 210000, vacancia: 5.8, ativos: 28, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "RBRR11", nome: "RBR Rendimento High Grade", setor: "Recebíveis", preco: 96.80, pvp: 0.99, dy: 12.5, liquidez: 200000, vacancia: 0, ativos: 480, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "JSRE11", nome: "JS Real Estate Multigestão", setor: "Híbrido", preco: 78.90, pvp: 0.59, dy: 9.5, liquidez: 190000, vacancia: 9.5, ativos: 35, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "RBRX11", nome: "RBR Multigestão", setor: "Híbrido", preco: 85.60, pvp: 0.62, dy: 10.5, liquidez: 180000, vacancia: 8.2, ativos: 30, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "FEXC11", nome: "BTG Pactual Fundo de CRI", setor: "Recebíveis", preco: 92.50, pvp: 0.97, dy: 13.2, liquidez: 170000, vacancia: 0, ativos: 550, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "BRCR11", nome: "BTG Pactual Corporate Office", setor: "Lajes Corporativas", preco: 68.50, pvp: 0.54, dy: 10.7, liquidez: 160000, vacancia: 18.5, ativos: 6, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "RBRY11", nome: "RBR Private Crédito Imob", setor: "Recebíveis", preco: 98.20, pvp: 0.95, dy: 14.5, liquidez: 150000, vacancia: 0, ativos: 280, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "GARE11", nome: "Guardian Real Estate", setor: "Híbrido", preco: 95.80, pvp: 0.88, dy: 8.5, liquidez: 140000, vacancia: 6.8, ativos: 22, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "VRTA11", nome: "Fator Verita", setor: "Recebíveis", preco: 97.50, pvp: 0.98, dy: 12.8, liquidez: 130000, vacancia: 0, ativos: 420, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "RVBI11", nome: "VBI REITS FOF", setor: "Fundo de Fundos", preco: 88.90, pvp: 0.77, dy: 12.0, liquidez: 120000, vacancia: 0, ativos: 22, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "HSLG11", nome: "HSI Logística", setor: "Logística", preco: 85.60, pvp: 0.83, dy: 9.0, liquidez: 110000, vacancia: 5.5, ativos: 12, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "VGHF11", nome: "Valora Hedge Fund", setor: "Híbrido", preco: 102.30, pvp: 0.68, dy: 16.0, liquidez: 100000, vacancia: 4.2, ativos: 25, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "VCJR11", nome: "Vectis Juros Real", setor: "Recebíveis", preco: 95.40, pvp: 0.96, dy: 13.5, liquidez: 95000, vacancia: 0, ativos: 380, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "RBRF11", nome: "RBR Alpha Multiestratégia", setor: "Híbrido", preco: 92.80, pvp: 0.70, dy: 11.5, liquidez: 90000, vacancia: 7.0, ativos: 32, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "MCHY11", nome: "Mauá Capital High Yield", setor: "Recebíveis", preco: 88.50, pvp: 0.75, dy: 18.6, liquidez: 85000, vacancia: 0, ativos: 250, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "GTWR11", nome: "Green Towers", setor: "Lajes Corporativas", preco: 95.60, pvp: 0.72, dy: 9.5, liquidez: 80000, vacancia: 15.2, ativos: 4, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "GZIT11", nome: "Gazit", setor: "Shoppings", preco: 72.40, pvp: 0.64, dy: 10.8, liquidez: 75000, vacancia: 13.5, ativos: 3, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "VGIP11", nome: "Valora CRI Índice de Preço", setor: "Recebíveis", preco: 94.80, pvp: 0.95, dy: 14.2, liquidez: 70000, vacancia: 0, ativos: 320, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "BTCI11", nome: "BTG Pactual Crédito Imobiliário", setor: "Recebíveis", preco: 96.20, pvp: 0.98, dy: 12.5, liquidez: 65000, vacancia: 0, ativos: 480, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "BTCR11", nome: "BTG Pactual Crédito Imobiliário II", setor: "Recebíveis", preco: 95.80, pvp: 0.97, dy: 12.8, liquidez: 60000, vacancia: 0, ativos: 450, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "CPSH11", nome: "Shoppings AAA", setor: "Shoppings", preco: 85.60, pvp: 0.78, dy: 9.2, liquidez: 55000, vacancia: 10.2, ativos: 4, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "SDIL11", nome: "SDI Logística Rio", setor: "Logística", preco: 88.90, pvp: 0.82, dy: 8.8, liquidez: 50000, vacancia: 6.5, ativos: 8, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "MGFF11", nome: "Mogno Fundo de Fundos", setor: "Fundo de Fundos", preco: 82.50, pvp: 0.85, dy: 11.0, liquidez: 48000, vacancia: 0, ativos: 20, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "RZAK11", nome: "Riza Akin", setor: "Híbrido", preco: 105.80, pvp: 0.88, dy: 8.5, liquidez: 45000, vacancia: 5.8, ativos: 30, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "XPCI11", nome: "XP Crédito Imobiliário", setor: "Recebíveis", preco: 94.50, pvp: 0.96, dy: 13.8, liquidez: 42000, vacancia: 0, ativos: 380, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "BPML11", nome: "BTG Pactual Shoppings", setor: "Shoppings", preco: 72.80, pvp: 0.68, dy: 10.6, liquidez: 40000, vacancia: 11.5, ativos: 5, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "KORE11", nome: "Kinea Oportunidades RE", setor: "Lajes Corporativas", preco: 98.50, pvp: 0.66, dy: 17.7, liquidez: 38000, vacancia: 8.5, ativos: 12, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "BBIG11", nome: "BB Imóveis Corporativos", setor: "Lajes Corporativas", preco: 85.60, pvp: 0.75, dy: 8.2, liquidez: 35000, vacancia: 14.2, ativos: 7, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "BROF11", nome: "BRPR Corporate Offices", setor: "Lajes Corporativas", preco: 68.90, pvp: 0.54, dy: 11.0, liquidez: 32000, vacancia: 16.8, ativos: 5, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "RBRP11", nome: "RBR Properties", setor: "Híbrido", preco: 82.40, pvp: 0.62, dy: 9.5, liquidez: 30000, vacancia: 9.2, ativos: 28, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "CCME11", nome: "Canuma", setor: "Híbrido", preco: 95.80, pvp: 0.85, dy: 9.0, liquidez: 28000, vacancia: 6.5, ativos: 25, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "HABT11", nome: "Habitat II", setor: "Residencial", preco: 78.50, pvp: 0.80, dy: 7.5, liquidez: 26000, vacancia: 5.2, ativos: 15, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "JSAF11", nome: "JS Ativos Financeiros", setor: "Recebíveis", preco: 96.80, pvp: 0.97, dy: 13.0, liquidez: 24000, vacancia: 0, ativos: 400, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "TRBL11", nome: "Tellus Rio Bravo Renda Logística", setor: "Logística", preco: 112.50, pvp: 0.95, dy: 7.8, liquidez: 22000, vacancia: 2.8, ativos: 18, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "KFOF11", nome: "Kinea FII", setor: "Fundo de Fundos", preco: 88.90, pvp: 0.92, dy: 10.5, liquidez: 20000, vacancia: 0, ativos: 28, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "RBRL11", nome: "RBR Log", setor: "Logística", preco: 85.60, pvp: 0.78, dy: 9.2, liquidez: 18000, vacancia: 5.5, ativos: 10, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "XPIN11", nome: "XP Industrial", setor: "Logística/Indústria", preco: 92.40, pvp: 0.64, dy: 14.3, liquidez: 16000, vacancia: 4.2, ativos: 20, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "ITRI11", nome: "Itaú Total Return", setor: "Híbrido", preco: 105.80, pvp: 0.92, dy: 8.8, liquidez: 15000, vacancia: 4.5, ativos: 35, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "BTAL11", nome: "BTG Pactual Agro Logística", setor: "Logística", preco: 88.50, pvp: 0.77, dy: 12.8, liquidez: 14000, vacancia: 3.8, ativos: 16, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "AFHI11", nome: "AF Invest CRI", setor: "Recebíveis", preco: 95.20, pvp: 0.96, dy: 13.5, liquidez: 13000, vacancia: 0, ativos: 350, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "RCRB11", nome: "Rio Bravo Renda Corporativa", setor: "Lajes Corporativas", preco: 82.50, pvp: 0.72, dy: 8.8, liquidez: 12000, vacancia: 13.5, ativos: 8, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "MFII11", nome: "Mérito Desenvolvimento Imobiliário", setor: "Híbrido", preco: 78.90, pvp: 0.57, dy: 23.4, liquidez: 11000, vacancia: 8.5, ativos: 18, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "ARCT11", nome: "Riza Arctium Real Estate", setor: "Híbrido", preco: 95.60, pvp: 0.85, dy: 9.2, liquidez: 10000, vacancia: 6.2, ativos: 30, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "SARE11", nome: "Santander Renda de Aluguéis", setor: "Híbrido", preco: 108.50, pvp: 0.90, dy: 8.5, liquidez: 9500, vacancia: 5.8, ativos: 40, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "FATN11", nome: "Athena I", setor: "Híbrido", preco: 92.80, pvp: 0.88, dy: 9.5, liquidez: 9000, vacancia: 4.5, ativos: 25, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "HCTR11", nome: "Hectare CE", setor: "Agronegócio", preco: 105.80, pvp: 0.95, dy: 7.2, liquidez: 8500, vacancia: 0, ativos: 12, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "FIIB11", nome: "Industrial do Brasil", setor: "Logística/Indústria", preco: 88.90, pvp: 0.82, dy: 9.5, liquidez: 8000, vacancia: 5.5, ativos: 14, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "VINO11", nome: "Vinci Offices", setor: "Lajes Corporativas", preco: 95.40, pvp: 0.76, dy: 8.2, liquidez: 7500, vacancia: 12.8, ativos: 9, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "CLIN11", nome: "Clínica", setor: "Saúde", preco: 102.50, pvp: 0.88, dy: 7.5, liquidez: 7000, vacancia: 2.5, ativos: 8, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "URPR11", nome: "Urca Prime Renda", setor: "Híbrido", preco: 95.80, pvp: 0.85, dy: 9.0, liquidez: 6500, vacancia: 6.5, ativos: 22, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "BCRI11", nome: "Banestes Recebíveis", setor: "Recebíveis", preco: 60.80, pvp: 0.95, dy: 12.5, liquidez: 6000, vacancia: 0, ativos: 380, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "RZAT11", nome: "Riza Arctium", setor: "Híbrido", preco: 92.50, pvp: 0.85, dy: 9.2, liquidez: 5500, vacancia: 5.8, ativos: 28, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "HTMX11", nome: "Hotel Maxinvest", setor: "Hotel", preco: 85.60, pvp: 0.78, dy: 8.5, liquidez: 5000, vacancia: 15.2, ativos: 6, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "BARI11", nome: "Barigui Rendimentos", setor: "Recebíveis", preco: 92.80, pvp: 0.97, dy: 12.2, liquidez: 4800, vacancia: 0, ativos: 320, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "CACR11", nome: "Cartesia FII", setor: "Recebíveis", preco: 95.40, pvp: 0.96, dy: 13.0, liquidez: 4500, vacancia: 0, ativos: 350, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "TEPP11", nome: "Tellus Properties", setor: "Híbrido", preco: 102.30, pvp: 0.89, dy: 8.8, liquidez: 4200, vacancia: 5.5, ativos: 32, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "ICRI11", nome: "Itaú Crédito Imobiliário IPCA", setor: "Recebíveis", preco: 96.80, pvp: 0.98, dy: 11.5, liquidez: 4000, vacancia: 0, ativos: 450, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "SNCI11", nome: "Suno Recebíveis", setor: "Recebíveis", preco: 94.50, pvp: 0.97, dy: 12.0, liquidez: 3800, vacancia: 0, ativos: 400, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "MANA11", nome: "Manati", setor: "Híbrido", preco: 88.90, pvp: 0.82, dy: 9.5, liquidez: 3500, vacancia: 6.8, ativos: 20, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "LIFE11", nome: "Life Capital Partners", setor: "Híbrido", preco: 95.60, pvp: 0.90, dy: 8.6, liquidez: 3200, vacancia: 4.2, ativos: 30, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "MCHF11", nome: "Mauá Capital Hedge Fund", setor: "Híbrido", preco: 102.40, pvp: 0.88, dy: 10.2, liquidez: 3000, vacancia: 3.5, ativos: 25, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "BCIA11", nome: "Bradesco Carteira Imobiliária Ativa", setor: "Híbrido", preco: 92.89, pvp: 0.95, dy: 9.5, liquidez: 2800, vacancia: 4.8, ativos: 35, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "VRTM11", nome: "Fator Verità Multiestratégia", setor: "Híbrido", preco: 95.80, pvp: 0.75, dy: 15.1, liquidez: 2600, vacancia: 5.2, ativos: 28, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "DEVA11", nome: "Devant Recebíveis", setor: "Recebíveis", preco: 94.20, pvp: 0.96, dy: 13.8, liquidez: 2400, vacancia: 0, ativos: 300, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "PATL11", nome: "Pátria Logística", setor: "Logística", preco: 88.50, pvp: 0.85, dy: 8.5, liquidez: 2200, vacancia: 4.2, ativos: 12, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "RECT11", nome: "UBS Office", setor: "Lajes Corporativas", preco: 95.60, pvp: 0.78, dy: 8.2, liquidez: 2000, vacancia: 11.5, ativos: 6, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "TOPP11", nome: "RBR Top Offices", setor: "Lajes Corporativas", preco: 82.50, pvp: 0.64, dy: 14.7, liquidez: 1800, vacancia: 8.5, ativos: 5, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "CYCR11", nome: "Cyrela Crédito", setor: "Recebíveis", preco: 95.40, pvp: 0.95, dy: 12.5, liquidez: 1600, vacancia: 0, ativos: 280, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "SNEL11", nome: "Suno Energia", setor: "Energia", preco: 102.80, pvp: 0.92, dy: 7.8, liquidez: 1400, vacancia: 0, ativos: 8, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "KCRE11", nome: "Kinea CR", setor: "Recebíveis", preco: 96.50, pvp: 0.98, dy: 11.8, liquidez: 1200, vacancia: 0, ativos: 420, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "QAGR11", nome: "Quasar Agro", setor: "Agronegócio", preco: 88.90, pvp: 0.85, dy: 9.5, liquidez: 1000, vacancia: 0, ativos: 10, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "AZPL11", nome: "Azul Properties", setor: "Híbrido", preco: 95.60, pvp: 0.82, dy: 8.8, liquidez: 900, vacancia: 6.5, ativos: 18, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "PORD11", nome: "Polo Recebíveis II", setor: "Recebíveis", preco: 94.80, pvp: 0.96, dy: 13.2, liquidez: 800, vacancia: 0, ativos: 250, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "KISU11", nome: "Kilima Suno 30", setor: "Fundo de Fundos", preco: 88.50, pvp: 0.90, dy: 10.5, liquidez: 700, vacancia: 0, ativos: 30, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "NSLU11", nome: "Hospital Nossa Sra Lourdes", setor: "Saúde", preco: 102.40, pvp: 0.88, dy: 7.2, liquidez: 600, vacancia: 2.8, ativos: 5, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "BPFF11", nome: "Brasil Plural Absoluto FOF", setor: "Fundo de Fundos", preco: 85.60, pvp: 0.85, dy: 10.2, liquidez: 550, vacancia: 0, ativos: 25, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "SNFF11", nome: "Suno Fundo de Fundos", setor: "Fundo de Fundos", preco: 92.80, pvp: 0.88, dy: 11.0, liquidez: 500, vacancia: 0, ativos: 28, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "WHGR11", nome: "WHG Real", setor: "Híbrido", preco: 95.40, pvp: 0.82, dy: 9.2, liquidez: 450, vacancia: 5.5, ativos: 20, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "RPRI11", nome: "RBR PR", setor: "Híbrido", preco: 88.90, pvp: 0.78, dy: 8.5, liquidez: 400, vacancia: 7.2, ativos: 22, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "LGCP11", nome: "LogCP Inter", setor: "Logística", preco: 85.60, pvp: 0.80, dy: 8.8, liquidez: 350, vacancia: 4.5, ativos: 10, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "XPSF11", nome: "XP Selection FOF", setor: "Fundo de Fundos", preco: 92.50, pvp: 0.87, dy: 10.8, liquidez: 300, vacancia: 0, ativos: 22, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "INLG11", nome: "Inter Logístico", setor: "Logística", preco: 88.90, pvp: 0.66, dy: 12.1, liquidez: 280, vacancia: 5.6, ativos: 14, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "OUJP11", nome: "Ourinvest JPP", setor: "Híbrido", preco: 95.60, pvp: 0.85, dy: 9.2, liquidez: 250, vacancia: 4.8, ativos: 28, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "AJFI11", nome: "AJ Malls", setor: "Shoppings", preco: 85.60, pvp: 0.75, dy: 7.3, liquidez: 220, vacancia: 9.5, ativos: 4, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "AIEC11", nome: "Autonomy Edifícios Corporativos", setor: "Lajes Corporativas", preco: 95.40, pvp: 0.82, dy: 7.5, liquidez: 200, vacancia: 10.2, ativos: 6, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "VTLT11", nome: "Votorantim Logística", setor: "Logística", preco: 88.50, pvp: 0.78, dy: 8.2, liquidez: 180, vacancia: 4.8, ativos: 12, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "HGPO11", nome: "CSHG Prime Offices", setor: "Lajes Corporativas", preco: 102.80, pvp: 0.85, dy: 7.0, liquidez: 160, vacancia: 13.5, ativos: 8, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "VGRI11", nome: "Valora Renda Imobiliária", setor: "Híbrido", preco: 95.60, pvp: 0.73, dy: 21.0, liquidez: 140, vacancia: 3.3, ativos: 25, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "GRUL11", nome: "GRU Logística", setor: "Logística", preco: 88.90, pvp: 0.80, dy: 8.5, liquidez: 120, vacancia: 4.2, ativos: 10, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "MORE11", nome: "More Real Estate FOF", setor: "Fundo de Fundos", preco: 92.50, pvp: 0.85, dy: 9.8, liquidez: 100, vacancia: 0, ativos: 20, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "BLMR11", nome: "Bluemacaw Renda+ FOF", setor: "Fundo de Fundos", preco: 85.60, pvp: 0.88, dy: 10.5, liquidez: 90, vacancia: 0, ativos: 22, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "RBHG11", nome: "Rio Bravo Crédito High Grade", setor: "Recebíveis", preco: 95.40, pvp: 0.95, dy: 12.5, liquidez: 80, vacancia: 0, ativos: 350, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "MORC11", nome: "More Recebíveis Imobiliários", setor: "Recebíveis", preco: 92.80, pvp: 0.90, dy: 11.2, liquidez: 70, vacancia: 0, ativos: 300, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "HGFF11", nome: "CSHG Imobiliário FOF", setor: "Fundo de Fundos", preco: 88.50, pvp: 0.85, dy: 10.2, liquidez: 60, vacancia: 0, ativos: 25, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "HSAF11", nome: "HSI Ativos Financeiros", setor: "Recebíveis", preco: 95.60, pvp: 0.96, dy: 12.8, liquidez: 55, vacancia: 0, ativos: 380, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "RBFF11", nome: "Rio Bravo IFIX FOF", setor: "Fundo de Fundos", preco: 92.40, pvp: 0.88, dy: 10.5, liquidez: 50, vacancia: 0, ativos: 28, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "CPFF11", nome: "Capitânia REIT FOF", setor: "Fundo de Fundos", preco: 85.60, pvp: 0.87, dy: 10.2, liquidez: 45, vacancia: 0, ativos: 24, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "PLCR11", nome: "Plural Recebíveis", setor: "Recebíveis", preco: 95.80, pvp: 0.95, dy: 12.5, liquidez: 40, vacancia: 0, ativos: 320, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "JSCR11", nome: "JS Crédito Imobiliário", setor: "Recebíveis", preco: 92.50, pvp: 0.97, dy: 11.8, liquidez: 38, vacancia: 0, ativos: 350, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "VCRI11", nome: "Vinci CRI", setor: "Recebíveis", preco: 94.80, pvp: 0.96, dy: 12.2, liquidez: 35, vacancia: 0, ativos: 300, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "SPXS11", nome: "SPX Syn", setor: "Híbrido", preco: 88.90, pvp: 0.82, dy: 9.0, liquidez: 32, vacancia: 5.5, ativos: 18, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "NCHB11", nome: "NCH EQI", setor: "Híbrido", preco: 95.40, pvp: 0.85, dy: 8.8, liquidez: 30, vacancia: 4.2, ativos: 22, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "SADI11", nome: "Santander Papéis Imob CDI", setor: "Recebíveis", preco: 92.80, pvp: 0.98, dy: 11.5, liquidez: 28, vacancia: 0, ativos: 400, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "BLMG11", nome: "Bluemacaw Logística", setor: "Logística", preco: 85.60, pvp: 0.66, dy: 14.6, liquidez: 25, vacancia: 4.2, ativos: 12, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "BTRA11", nome: "BTG Pactual Terras Agrícolas", setor: "Agronegócio", preco: 88.50, pvp: 0.55, dy: 11.2, liquidez: 22, vacancia: 0, ativos: 8, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: true },
+            { ticker: "ARRI11", nome: "Átrio Reit Recebíveis", setor: "Recebíveis", preco: 95.40, pvp: 0.61, dy: 20.5, liquidez: 20, vacancia: 0, ativos: 250, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "XPPR11", nome: "XP Properties", setor: "Híbrido", preco: 92.80, pvp: 0.82, dy: 8.5, liquidez: 18, vacancia: 5.8, ativos: 20, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "KIVO11", nome: "Kivo", setor: "Híbrido", preco: 88.50, pvp: 0.80, dy: 9.2, liquidez: 16, vacancia: 4.5, ativos: 18, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "HOFC11", nome: "RB Capital Office Income", setor: "Lajes Corporativas", preco: 95.60, pvp: 0.58, dy: 8.5, liquidez: 14, vacancia: 12.5, ativos: 5, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "JPPA11", nome: "JPP Allocation Mogno", setor: "Fundo de Fundos", preco: 88.90, pvp: 0.85, dy: 10.2, liquidez: 12, vacancia: 0, ativos: 22, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "PMIS11", nome: "Prime Shopping", setor: "Shoppings", preco: 85.60, pvp: 0.75, dy: 7.8, liquidez: 10, vacancia: 9.5, ativos: 4, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "ZAVI11", nome: "Zavit Real Estate", setor: "Híbrido", preco: 92.50, pvp: 0.82, dy: 8.5, liquidez: 9, vacancia: 5.2, ativos: 18, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "VSLH11", nome: "Versalhes Recebíveis", setor: "Recebíveis", preco: 95.40, pvp: 0.95, dy: 12.0, liquidez: 8, vacancia: 0, ativos: 280, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "SPTW11", nome: "SP Downtown", setor: "Lajes Corporativas", preco: 88.90, pvp: 0.74, dy: 13.4, liquidez: 7, vacancia: 11.5, ativos: 6, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "IBCR11", nome: "Integral Brei CRI", setor: "Recebíveis", preco: 92.80, pvp: 0.96, dy: 11.8, liquidez: 6, vacancia: 0, ativos: 320, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "RELG11", nome: "REC Logística", setor: "Logística", preco: 85.60, pvp: 0.80, dy: 8.5, liquidez: 5, vacancia: 4.8, ativos: 10, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "CARE11", nome: "Brazilian Graveyard", setor: "Outros", preco: 95.40, pvp: 0.85, dy: 7.2, liquidez: 4, vacancia: 2.5, ativos: 15, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "VIFI11", nome: "Vinci Instrumentos Financeiros", setor: "Recebíveis", preco: 92.50, pvp: 0.95, dy: 11.5, liquidez: 3, vacancia: 0, ativos: 300, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "CNES11", nome: "Cenesp", setor: "Híbrido", preco: 88.90, pvp: 0.82, dy: 8.8, liquidez: 2, vacancia: 5.5, ativos: 18, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "VIUR11", nome: "Vinci Imóveis Urbanos", setor: "Híbrido", preco: 95.60, pvp: 0.85, dy: 8.2, liquidez: 1, vacancia: 4.8, ativos: 20, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false },
+            { ticker: "TORD11", nome: "Tordesilhas", setor: "Híbrido", preco: 88.50, pvp: 0.80, dy: 9.0, liquidez: 0.5, vacancia: 5.2, ativos: 16, ifix: true, monoAtivo: false, monoInquilino: false, fiagro: false }
+        ];
+
+        let currentData = [];
+        let currentSort = { column: 'score', dir: 'desc' };
+
+        function calculateScore(fii) {
+            let score = 0;
+            if (fii.pvp >= 0.85 && fii.pvp <= 1.05) score += 30;
+            else if (fii.pvp >= 0.75 && fii.pvp < 0.85) score += 25;
+            else if (fii.pvp > 1.05 && fii.pvp <= 1.15) score += 20;
+            else if (fii.pvp >= 0.65 && fii.pvp < 0.75) score += 15;
+            else if (fii.pvp > 1.15 && fii.pvp <= 1.30) score += 10;
+            else score += 5;
+
+            if (fii.liquidez >= 1000000) score += 25;
+            else if (fii.liquidez >= 500000) score += 20;
+            else if (fii.liquidez >= 200000) score += 15;
+            else if (fii.liquidez >= 100000) score += 10;
+            else if (fii.liquidez >= 50000) score += 5;
+            else score += 2;
+
+            if (fii.setor === "Recebíveis") score += 20;
+            else if (fii.vacancia <= 3) score += 20;
+            else if (fii.vacancia <= 5) score += 18;
+            else if (fii.vacancia <= 8) score += 15;
+            else if (fii.vacancia <= 12) score += 10;
+            else if (fii.vacancia <= 18) score += 5;
+            else score += 2;
+
+            if (!fii.monoAtivo && !fii.monoInquilino && fii.ativos >= 10) score += 15;
+            else if (!fii.monoAtivo && !fii.monoInquilino && fii.ativos >= 5) score += 12;
+            else if (!fii.monoAtivo && !fii.monoInquilino) score += 8;
+            else score += 3;
+
+            if (fii.ifix) score += 10;
+            else score += 3;
+
+            return Math.min(100, Math.max(0, score));
+        }
+
+        function getScoreClass(score) {
+            if (score >= 90) return { class: "row-excellent", badge: "score-excellent", label: "Excelente", color: "#10b981" };
+            if (score >= 70) return { class: "row-good", badge: "score-good", label: "Bom", color: "#06b6d4" };
+            if (score >= 50) return { class: "row-moderate", badge: "score-moderate", label: "Moderado", color: "#f59e0b" };
+            if (score >= 30) return { class: "row-poor", badge: "score-poor", label: "Fraco", color: "#ef4444" };
+            return { class: "row-bad", badge: "score-bad", label: "Ruim", color: "#dc2626" };
+        }
+
+        function formatCurrency(value) {
+            if (value >= 1000000) return (value / 1000000).toFixed(1) + "M";
+            if (value >= 1000) return (value / 1000).toFixed(0) + "K";
+            return value.toString();
+        }
+
+        function updateFilterDisplay(type, value) {
+            const el = document.getElementById(type + "Value");
+            if (type === "pvp") el.textContent = parseFloat(value).toFixed(2);
+            else if (type === "liquidez") el.textContent = formatCurrency(parseInt(value));
+            else if (type === "dy") el.textContent = parseFloat(value).toFixed(1) + "%";
+            else if (type === "vacancia") el.textContent = value + "%";
+            applyFilters();
+        }
+
+        function renderSectorFilters() {
+            const sectors = [...new Set(fiiData.map(f => f.setor))].sort();
+            const container = document.getElementById("sectorFilters");
+            if (!container) return;
+            container.innerHTML = sectors.map(sector => `
+                <label class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" value="${sector}" checked onchange="applyFilters()"
+                        class="sector-checkbox w-4 h-4 rounded border-gray-600 bg-slate-800 text-emerald-500">
+                    <span class="text-sm text-gray-300">${sector}</span>
+                </label>
+            `).join("");
+        }
+
+        function applyFilters() {
+            const pvpMax = parseFloat(document.getElementById("pvpFilter").value);
+            const liquidezMin = parseInt(document.getElementById("liquidezFilter").value);
+            const dyMin = parseFloat(document.getElementById("dyFilter").value);
+            const vacanciaMax = parseInt(document.getElementById("vacanciaFilter").value);
+            const ifixOnly = document.getElementById("ifixOnly").checked;
+            const excludeMonoAtivo = document.getElementById("excludeMonoAtivo").checked;
+            const excludeMonoInquilino = document.getElementById("excludeMonoInquilino").checked;
+            const excludeFiagro = document.getElementById("excludeFiagro").checked;
+            const base10Only = document.getElementById("base10Only") ? document.getElementById("base10Only").checked : false;
+            
+            const sectorCheckboxes = document.querySelectorAll('.sector-checkbox');
+            const selectedSectors = Array.from(sectorCheckboxes).filter(cb => cb.checked).map(cb => cb.value);
+
+            currentData = fiiData.map(fii => ({ ...fii, score: calculateScore(fii) })).filter(fii => {
+                if (fii.pvp > pvpMax) return false;
+                if (fii.liquidez < liquidezMin) return false;
+                if (fii.dy < dyMin) return false;
+                if (fii.setor !== "Recebíveis" && fii.vacancia > vacanciaMax) return false;
+                if (ifixOnly && !fii.ifix) return false;
+                if (excludeMonoAtivo && fii.monoAtivo) return false;
+                if (excludeMonoInquilino && fii.monoInquilino) return false;
+                if (excludeFiagro && fii.fiagro) return false;
+                if (base10Only && fii.preco > 15) return false;
+                if (sectorCheckboxes.length > 0 && !selectedSectors.includes(fii.setor)) return false;
+                return true;
+            });
+
+            sortByColumn(currentSort.column, false);
+            updateKPIs();
+            updateAnalysis();
+        }
+
+        function updateKPIs() {
+            document.getElementById("totalFunds").textContent = currentData.length;
+            document.getElementById("bestOpportunities").textContent = currentData.filter(f => f.score >= 80).length;
+            const avgPVP = currentData.length > 0 ? currentData.reduce((a, b) => a + b.pvp, 0) / currentData.length : 0;
+            document.getElementById("avgPVP").textContent = avgPVP.toFixed(2);
+            const avgDY = currentData.length > 0 ? currentData.reduce((a, b) => a + b.dy, 0) / currentData.length : 0;
+            document.getElementById("avgDY").textContent = avgDY.toFixed(2) + "%";
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById("fiiTableBody");
+            tbody.innerHTML = "";
+
+            currentData.forEach(fii => {
+                const scoreInfo = getScoreClass(fii.score);
+                const row = document.createElement("tr");
+                row.className = scoreInfo.class + " hover:bg-white/5 transition-colors";
+
+                row.innerHTML = `
+            <td class="px-4 py-3">
+                <div class="flex items-center gap-2">
+                    <span class="w-8 h-8 rounded-lg ${scoreInfo.badge} flex items-center justify-center text-white text-xs font-bold">${Math.round(fii.score)}</span>
+                    <span class="text-xs text-gray-400">${scoreInfo.label}</span>
+                </div>
+            </td>
+            <td class="px-4 py-3 font-bold text-white flex items-center gap-2">
+                ${fii.ticker}
+                ${(fii.monoAtivo || fii.monoInquilino) ? '<span title="Monoativo/Monoinquilino" class="text-amber-500 cursor-help">⚠️</span>' : ''}
+            </td>
+            <td class="px-4 py-3"><span class="px-2 py-1 rounded-md bg-slate-800 text-xs text-gray-300 border border-gray-700">${fii.setor}</span></td>
+            <td class="px-4 py-3 text-right font-mono text-gray-300">R$ ${fii.preco.toFixed(2)}</td>
+            <td class="px-4 py-3 text-right font-mono ${fii.pvp <= 1 ? 'text-emerald-400' : 'text-amber-400'}">${fii.pvp.toFixed(2)}</td>
+            <td class="px-4 py-3 text-right font-mono text-emerald-400">${fii.dy.toFixed(1)}%</td>
+            <td class="px-4 py-3 text-right font-mono text-gray-300">R$ ${formatCurrency(fii.liquidez)}</td>
+            <td class="px-4 py-3 text-right font-mono ${fii.vacancia <= 5 ? 'text-emerald-400' : fii.vacancia <= 10 ? 'text-amber-400' : 'text-red-400'}">${fii.vacancia.toFixed(1)}%</td>
+            <td class="px-4 py-3 text-center text-gray-300">${fii.ativos}</td>
+            <td class="px-4 py-3 text-center">${fii.ifix ? '<span class="text-emerald-400">✓</span>' : '<span class="text-gray-600">-</span>'}</td>
+            <td class="px-4 py-3 text-center">
+                <button onclick="showDetails('${fii.ticker}')" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 rounded-lg text-xs text-cyan-400 transition-colors border border-gray-700">Ver</button>
+            </td>
+        `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function sortTable() {
+            const sortBy = document.getElementById("sortBy").value;
+            sortByColumn(sortBy, true);
+        }
+
+        function sortByColumn(column, resetDir) {
+            document.querySelectorAll('th[id^="th-"]').forEach(th => {
+                th.classList.remove('sort-asc', 'sort-desc');
+            });
+
+            if (resetDir || column !== currentSort.column) {
+                currentSort = { column: column, dir: 'desc' };
+            } else {
+                currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+            }
+
+            const th = document.getElementById('th-' + column);
+            if (th) th.classList.add(currentSort.dir === 'asc' ? 'sort-asc' : 'sort-desc');
+
+            const dir = currentSort.dir === 'asc' ? 1 : -1;
+
+            currentData.sort((a, b) => {
+                let valA = a[column];
+                let valB = b[column];
+                if (typeof valA === "string") valA = valA.toLowerCase();
+                if (typeof valB === "string") valB = valB.toLowerCase();
+                if (valA < valB) return -1 * dir;
+                if (valA > valB) return 1 * dir;
+                return 0;
+            });
+
+            renderTable();
+        }
+
+        function filterBySearch() {
+            const search = document.getElementById("searchInput").value.toLowerCase();
+            if (!search) {
+                applyFilters();
+                return;
+            }
+
+            currentData = currentData.filter(fii =>
+                fii.ticker.toLowerCase().includes(search) ||
+                fii.nome.toLowerCase().includes(search)
+            );
+            renderTable();
+        }
+
+        function resetFilters() {
+            document.getElementById("pvpFilter").value = 1.2;
+            document.getElementById("liquidezFilter").value = 800000;
+            document.getElementById("dyFilter").value = 6;
+            document.getElementById("vacanciaFilter").value = 15;
+            document.getElementById("ifixOnly").checked = true;
+            document.getElementById("excludeMonoAtivo").checked = true;
+            document.getElementById("excludeMonoInquilino").checked = true;
+            document.getElementById("excludeFiagro").checked = true;
+            if (document.getElementById("base10Only")) document.getElementById("base10Only").checked = false;
+            document.getElementById("searchInput").value = "";
+
+            document.querySelectorAll('.sector-checkbox').forEach(cb => cb.checked = true);
+
+            updateFilterDisplay("pvp", 1.2);
+            updateFilterDisplay("liquidez", 800000);
+            updateFilterDisplay("dy", 6);
+            updateFilterDisplay("vacancia", 15);
+            applyFilters();
+        }
+
+        function showDetails(ticker) {
+            const fii = fiiData.find(f => f.ticker === ticker);
+            if (!fii) return;
+
+            const score = calculateScore(fii);
+            const scoreInfo = getScoreClass(score);
+
+            document.getElementById("modalTicker").textContent = fii.ticker;
+            document.getElementById("modalName").textContent = fii.nome;
+
+            const content = document.getElementById("modalContent");
+            content.innerHTML = `
+        <div class="grid grid-cols-2 gap-4">
+            <div class="bg-slate-800 rounded-xl p-4 border border-gray-700">
+                <div class="text-xs text-gray-400 mb-1">Score de Qualidade</div>
+                <div class="flex items-center gap-2">
+                    <span class="w-12 h-12 rounded-xl ${scoreInfo.badge} flex items-center justify-center text-white text-lg font-bold">${Math.round(score)}</span>
+                    <span class="text-lg font-semibold" style="color:${scoreInfo.color}">${scoreInfo.label}</span>
+                </div>
+            </div>
+            <div class="bg-slate-800 rounded-xl p-4 border border-gray-700">
+                <div class="text-xs text-gray-400 mb-1">Setor</div>
+                <div class="text-lg font-semibold text-white">${fii.setor}</div>
+            </div>
+            <div class="bg-slate-800 rounded-xl p-4 border border-gray-700">
+                <div class="text-xs text-gray-400 mb-1">Preço Atual</div>
+                <div class="text-xl font-bold text-white">R$ ${fii.preco.toFixed(2)}</div>
+            </div>
+            <div class="bg-slate-800 rounded-xl p-4 border border-gray-700">
+                <div class="text-xs text-gray-400 mb-1">P/VP</div>
+                <div class="text-xl font-bold ${fii.pvp <= 1 ? 'text-emerald-400' : 'text-amber-400'}">${fii.pvp.toFixed(2)}</div>
+                <div class="text-xs ${fii.pvp <= 1 ? 'text-emerald-600' : 'text-amber-600'}">${fii.pvp <= 1 ? 'Desconto de ' + ((1 - fii.pvp) * 100).toFixed(1) + '%' : 'Prêmio de ' + ((fii.pvp - 1) * 100).toFixed(1) + '%'}</div>
+            </div>
+            <div class="bg-slate-800 rounded-xl p-4 border border-gray-700">
+                <div class="text-xs text-gray-400 mb-1">Dividend Yield</div>
+                <div class="text-xl font-bold text-emerald-400">${fii.dy.toFixed(1)}%</div>
+            </div>
+            <div class="bg-slate-800 rounded-xl p-4 border border-gray-700">
+                <div class="text-xs text-gray-400 mb-1">Liquidez Diária</div>
+                <div class="text-xl font-bold text-white">R$ ${formatCurrency(fii.liquidez)}</div>
+            </div>
+            <div class="bg-slate-800 rounded-xl p-4 border border-gray-700">
+                <div class="text-xs text-gray-400 mb-1">Vacância</div>
+                <div class="text-xl font-bold ${fii.vacancia <= 5 ? 'text-emerald-400' : fii.vacancia <= 10 ? 'text-amber-400' : 'text-red-400'}">${fii.vacancia.toFixed(1)}%</div>
+            </div>
+            <div class="bg-slate-800 rounded-xl p-4 border border-gray-700">
+                <div class="text-xs text-gray-400 mb-1">Quantidade de Ativos</div>
+                <div class="text-xl font-bold text-white">${fii.ativos}</div>
+                <div class="text-xs text-gray-500">${fii.monoAtivo ? '⚠️ Monoativo' : fii.monoInquilino ? '⚠️ Monoinquilino' : '✅ Diversificado'}</div>
+            </div>
+        </div>
+        <div class="bg-slate-800 rounded-xl p-4 border border-gray-700">
+            <div class="text-xs text-gray-400 mb-2">Recomendação</div>
+            <div class="text-sm text-gray-300 leading-relaxed">
+                ${getRecommendation(fii, score)}
+            </div>
+        </div>
+    `;
+
+            document.getElementById("detailModal").classList.remove("hidden");
+        }
+
+        function getRecommendation(fii, score) {
+            let rec = "";
+            let yieldTrap = (fii.dy > 14 && (fii.vacancia > 10 || fii.pvp < 0.8));
+
+            if (yieldTrap) {
+                rec += "⚠️ <strong>ALERTA DE YIELD TRAP</strong> - DY alto pode ser insustentável. Cuidado com o risco associado. <br/>";
+            }
+
+            if (score >= 80) {
+                rec += "🟢 <strong>COMPRA FORTE</strong> - Fundo com excelentes fundamentos. ";
+                if (fii.pvp < 0.9) rec += "P/VP descontado oferece margem de segurança. ";
+                if (fii.liquidez > 500000) rec += "Alta liquidez facilita operações. ";
+                if (fii.dy > 10 && !yieldTrap) rec += "DY atrativo para renda passiva. ";
+            } else if (score >= 60) {
+                rec += "🟡 <strong>COMPRA MODERADA</strong> - Fundo com bons fundamentos, mas atenção a alguns pontos. ";
+                if (fii.vacancia > 8) rec += "Monitorar evolução da vacância. ";
+                if (fii.pvp > 1.0) rec += "P/VP acima de 1, avaliar se justificado. ";
+            } else {
+                rec += "🔴 <strong>NEUTRO/AGUARDAR</strong> - Fundo com fundamentos fracos ou situação atípica. ";
+                if (fii.vacancia > 15) rec += "Vacância muito elevada. ";
+                if (fii.liquidez < 50000) rec += "Liquidez muito baixa. ";
+            }
+            return rec;
+        }
+
+        function closeModal() {
+            document.getElementById("detailModal").classList.add("hidden");
+        }
+
+        function updateAnalysis() {
+            const container = document.getElementById("analysisContent");
+            const top5 = [...currentData].sort((a, b) => b.score - a.score).slice(0, 5);
+
+            container.innerHTML = top5.map((fii, i) => {
+                const scoreInfo = getScoreClass(fii.score);
+                return `
+            <div class="bg-slate-800/50 rounded-xl p-4 border border-gray-700/50">
+                <div class="flex items-start justify-between">
+                    <div class="flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-lg ${scoreInfo.badge} flex items-center justify-center text-white text-sm font-bold">${i + 1}</span>
+                        <div>
+                            <div class="font-bold text-white">${fii.ticker} - ${fii.nome}</div>
+                            <div class="text-xs text-gray-400">${fii.setor} | Score: ${Math.round(fii.score)}/100</div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-sm font-mono text-emerald-400">DY ${fii.dy.toFixed(1)}%</div>
+                        <div class="text-xs font-mono text-gray-400">P/VP ${fii.pvp.toFixed(2)}</div>
+                    </div>
+                </div>
+                <div class="mt-3 text-xs text-gray-400 leading-relaxed">
+                    ${getRecommendation(fii, fii.score)}
+                </div>
+            </div>
+        `;
+            }).join("");
+        }
+
+        function exportData() {
+            const headers = ["Ticker", "Nome", "Setor", "Preço", "P/VP", "DY", "Liquidez", "Vacância", "Ativos", "IFIX", "Score", "Recomendação"];
+            const rows = currentData.map(f => [
+                f.ticker, f.nome, f.setor, f.preco.toFixed(2), f.pvp.toFixed(2), f.dy.toFixed(2),
+                f.liquidez, f.vacancia.toFixed(2), f.ativos, f.ifix ? "Sim" : "Não",
+                Math.round(f.score), getScoreClass(f.score).label
+            ]);
+
+            const csv = [headers.join(";"), ...rows.map(r => r.join(";"))].join("\n");
+            const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "fiis_analytics_" + new Date().toISOString().split("T")[0] + ".csv";
+            link.click();
+        }
+
+        // Inicialização
+        document.addEventListener("DOMContentLoaded", function () {
+            renderSectorFilters();
+            applyFilters();
+        });
+
+        // Fechar modal ao clicar fora
+        document.getElementById("detailModal").addEventListener("click", function (e) {
+            if (e.target === this) closeModal();
+        });
+    </script>
+</body>
+
+</html>
