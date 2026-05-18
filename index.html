@@ -184,7 +184,7 @@
                 <button onclick="resetFilters()" class="text-xs text-cyan-400 hover:text-cyan-300 transition-colors">↺
                     Resetar Filtros</button>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
                 <div>
                     <label class="block text-xs text-gray-400 mb-2">P/VP Máximo</label>
                     <div class="flex items-center gap-3">
@@ -192,6 +192,13 @@
                             oninput="updateFilterDisplay('pvp', this.value)">
                         <span class="text-sm font-mono text-emerald-400 w-12" id="pvpValue">1.20</span>
                     </div>
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-2">P/VP Ideal</label>
+                    <select id="pvpIdealFilter" onchange="applyFilters()" class="w-full bg-slate-800 border border-gray-600 rounded text-sm text-gray-300 p-1.5 focus:border-emerald-500 focus:outline-none">
+                        <option value="todos">Todos</option>
+                        <option value="ideal">Apenas P/VP Ideal</option>
+                    </select>
                 </div>
                 <div>
                     <label class="block text-xs text-gray-400 mb-2">Liquidez Mínima (R$)</label>
@@ -202,7 +209,7 @@
                     </div>
                 </div>
                 <div>
-                    <label class="block text-xs text-gray-400 mb-2">DY Mínimo (%)</label>
+                    <label class="block text-xs text-gray-400 mb-2">DY Mínimo Anual (%)</label>
                     <div class="flex items-center gap-3">
                         <input type="range" id="dyFilter" min="0" max="20" step="0.5" value="6"
                             oninput="updateFilterDisplay('dy', this.value)">
@@ -247,7 +254,11 @@
             </div>
             
             <div class="border-t border-gray-700/50 pt-4">
-                <label class="block text-xs text-gray-400 mb-2">Filtrar por Setores</label>
+                <div class="flex items-center gap-4 mb-2">
+                    <label class="block text-xs text-gray-400">Filtrar por Setores</label>
+                    <button onclick="selectAllSectors(true)" class="text-[10px] text-cyan-400 hover:underline">Selecionar Todos</button>
+                    <button onclick="selectAllSectors(false)" class="text-[10px] text-cyan-400 hover:underline">Limpar Seleção</button>
+                </div>
                 <div id="sectorFilters" class="flex flex-wrap gap-3">
                     <!-- Gerado dinamicamente via JS -->
                 </div>
@@ -302,7 +313,7 @@
                             <th class="px-4 py-3 font-semibold cursor-pointer hover:text-white transition-colors text-right"
                                 onclick="sortByColumn('pvp')" id="th-pvp">P/VP</th>
                             <th class="px-4 py-3 font-semibold cursor-pointer hover:text-white transition-colors text-right"
-                                onclick="sortByColumn('dy')" id="th-dy">DY</th>
+                                onclick="sortByColumn('dy')" id="th-dy">DY Mensal</th>
                             <th class="px-4 py-3 font-semibold cursor-pointer hover:text-white transition-colors text-right"
                                 onclick="sortByColumn('liquidez')" id="th-liquidez">Liquidez</th>
                             <th class="px-4 py-3 font-semibold cursor-pointer hover:text-white transition-colors text-right"
@@ -554,6 +565,21 @@
             applyFilters();
         }
 
+        function selectAllSectors(check) {
+            document.querySelectorAll('.sector-checkbox').forEach(cb => cb.checked = check);
+            applyFilters();
+        }
+
+        function getPaperProfile(ticker, nome) {
+            const hyTickers = ['HCTR11', 'DEVA11', 'TORD11', 'VSLH11', 'KNHY11', 'KNUQ11', 'MCHY11', 'ARRI11', 'URPR11', 'CACR11', 'VGIR11', 'HSAF11', 'HABT11'];
+            const hgTickers = ['KNCR11', 'KNIP11', 'HGCR11', 'RBRR11', 'VRTA11', 'CPTS11', 'CVBI11', 'KCRE11', 'RBHG11', 'AFHI11', 'VCJR11', 'MCCI11', 'VGIP11'];
+            if (hyTickers.includes(ticker)) return "High Yield";
+            if (hgTickers.includes(ticker)) return "High Grade";
+            if (nome.toLowerCase().includes('high yield')) return "High Yield";
+            if (nome.toLowerCase().includes('high grade')) return "High Grade";
+            return "Mid Grade";
+        }
+
         function renderSectorFilters() {
             const sectors = [...new Set(fiiData.map(f => f.setor))].sort();
             const container = document.getElementById("sectorFilters");
@@ -580,6 +606,8 @@
             
             const sectorCheckboxes = document.querySelectorAll('.sector-checkbox');
             const selectedSectors = Array.from(sectorCheckboxes).filter(cb => cb.checked).map(cb => cb.value);
+            
+            const pvpIdeal = document.getElementById("pvpIdealFilter") ? document.getElementById("pvpIdealFilter").value : "todos";
 
             currentData = fiiData.map(fii => ({ ...fii, score: calculateScore(fii) })).filter(fii => {
                 if (fii.pvp > pvpMax) return false;
@@ -592,6 +620,16 @@
                 if (excludeFiagro && fii.fiagro) return false;
                 if (base10Only && fii.preco > 15) return false;
                 if (sectorCheckboxes.length > 0 && !selectedSectors.includes(fii.setor)) return false;
+                
+                if (pvpIdeal === "ideal") {
+                    const isTijolo = ["Logística", "Shoppings", "Lajes Corporativas", "Residencial", "Saúde", "Hotel", "Logística/Indústria", "Híbrido"].includes(fii.setor);
+                    if (isTijolo) {
+                        if (fii.pvp < 0.9 || fii.pvp > 1.1) return false;
+                    } else {
+                        if (fii.pvp < 1.0 || fii.pvp > 1.05) return false;
+                    }
+                }
+                
                 return true;
             });
 
@@ -629,10 +667,13 @@
                 ${fii.ticker}
                 ${(fii.monoAtivo || fii.monoInquilino) ? '<span title="Monoativo/Monoinquilino" class="text-amber-500 cursor-help">⚠️</span>' : ''}
             </td>
-            <td class="px-4 py-3"><span class="px-2 py-1 rounded-md bg-slate-800 text-xs text-gray-300 border border-gray-700">${fii.setor}</span></td>
+            <td class="px-4 py-3">
+                <span class="px-2 py-1 rounded-md bg-slate-800 text-xs text-gray-300 border border-gray-700 block text-center">${fii.setor}</span>
+                ${fii.setor === 'Recebíveis' ? `<span class="text-[10px] text-gray-500 block text-center mt-1">${getPaperProfile(fii.ticker, fii.nome)}</span>` : ''}
+            </td>
             <td class="px-4 py-3 text-right font-mono text-gray-300">R$ ${fii.preco.toFixed(2)}</td>
             <td class="px-4 py-3 text-right font-mono ${fii.pvp <= 1 ? 'text-emerald-400' : 'text-amber-400'}">${fii.pvp.toFixed(2)}</td>
-            <td class="px-4 py-3 text-right font-mono text-emerald-400">${fii.dy.toFixed(1)}%</td>
+            <td class="px-4 py-3 text-right font-mono text-emerald-400">${(fii.dy / 12).toFixed(2)}%</td>
             <td class="px-4 py-3 text-right font-mono text-gray-300">R$ ${formatCurrency(fii.liquidez)}</td>
             <td class="px-4 py-3 text-right font-mono ${fii.vacancia <= 5 ? 'text-emerald-400' : fii.vacancia <= 10 ? 'text-amber-400' : 'text-red-400'}">${fii.vacancia.toFixed(1)}%</td>
             <td class="px-4 py-3 text-center text-gray-300">${fii.ativos}</td>
@@ -835,9 +876,9 @@
         }
 
         function exportData() {
-            const headers = ["Ticker", "Nome", "Setor", "Preço", "P/VP", "DY", "Liquidez", "Vacância", "Ativos", "IFIX", "Score", "Recomendação"];
+            const headers = ["Ticker", "Nome", "Setor", "Preço", "P/VP", "DY Anual", "DY Mensal", "Liquidez", "Vacância", "Ativos", "IFIX", "Score", "Recomendação"];
             const rows = currentData.map(f => [
-                f.ticker, f.nome, f.setor, f.preco.toFixed(2), f.pvp.toFixed(2), f.dy.toFixed(2),
+                f.ticker, f.nome, f.setor, f.preco.toFixed(2), f.pvp.toFixed(2), f.dy.toFixed(2), (f.dy / 12).toFixed(2),
                 f.liquidez, f.vacancia.toFixed(2), f.ativos, f.ifix ? "Sim" : "Não",
                 Math.round(f.score), getScoreClass(f.score).label
             ]);
